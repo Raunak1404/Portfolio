@@ -14,7 +14,7 @@ interface TimelineEvent {
   title: string;
   description: string;
   category: 'School' | 'Competition' | 'Hackathon' | 'Club' | 'Internship' | 'Work';
-  icon: React.ReactNode; // Keep React.ReactNode for icons
+  icon: React.ReactNode;
 }
 
 const timelineEvents: TimelineEvent[] = [
@@ -61,14 +61,10 @@ const timelineEvents: TimelineEvent[] = [
 ];
 
 export default function TimelinePage() {
-  const timelineLineRef = useRef<HTMLDivElement>(null);
   const eventItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    // Initialize elements for animation
-    if (timelineLineRef.current) {
-      anime.set(timelineLineRef.current, { opacity: 0, scaleY: 0 });
-    }
+    // Initialize event items for animation
     eventItemRefs.current.forEach((eventWrapperEl, index) => {
       if (eventWrapperEl) {
         const parts = Array.from(eventWrapperEl.children) as HTMLElement[];
@@ -76,55 +72,48 @@ export default function TimelinePage() {
           // parts[0] is icon/date column, parts[1] is card column
           // For even index: icon/date is left, card is right
           // For odd index: icon/date is right (due to flex-row-reverse), card is left
-          anime.set(parts[0], { opacity: 0, translateX: index % 2 === 0 ? -30 : 30 });
-          anime.set(parts[1], { opacity: 0, translateX: index % 2 === 0 ? 30 : -30 });
+          const initialTranslateXPart0 = index % 2 === 0 ? -50 : 50;
+          const initialTranslateXPart1 = index % 2 === 0 ? 50 : -50;
+          
+          anime.set(parts[0], { opacity: 0, translateX: initialTranslateXPart0, translateY: 20 });
+          anime.set(parts[1], { opacity: 0, translateX: initialTranslateXPart1, translateY: 20 });
         }
       }
     });
 
     const tl = anime.timeline({
       easing: 'easeOutExpo',
-      duration: 600, // Default duration for timeline items
+      // Default duration can be set here, or per animation
     });
-
-    const lineAnimationDuration = 800;
-    if (timelineLineRef.current) {
-      tl.add({
-        targets: timelineLineRef.current,
-        opacity: [0, 1],
-        scaleY: [0, 1],
-        duration: lineAnimationDuration,
-        transformOrigin: 'top center',
-      }, 0); // Start timeline line animation at the beginning
-    }
 
     eventItemRefs.current.forEach((eventWrapperEl, index) => {
       if (eventWrapperEl) {
         const parts = Array.from(eventWrapperEl.children) as HTMLElement[];
         if (parts.length === 2) {
-          const firstPartToAnimate = parts[0];
-          const secondPartToAnimate = parts[1];
+          const iconDateColumn = parts[0];
+          const cardColumn = parts[1];
           
-          const firstPartTranslateXStart = index % 2 === 0 ? -30 : 30;
-          const secondPartTranslateXStart = index % 2 === 0 ? 30 : -30;
+          const baseEventDelay = index * 350; // Stagger start of each event group
 
-          // Animate the first part (icon/date or card depending on index)
+          // Animate the icon/date column
           tl.add({
-            targets: firstPartToAnimate,
+            targets: iconDateColumn,
             opacity: [0, 1],
-            translateX: [firstPartTranslateXStart, 0],
-            translateY: [10,0], // Slight upward movement
+            translateX: 0, // Animate to final X position
+            translateY: 0, // Animate to final Y position
             duration: 500,
-          }, (lineAnimationDuration * 0.5) + (index * 200)); // Stagger start after line animation is partially done
+            easing: 'easeOutCubic',
+          }, baseEventDelay);
 
-          // Animate the second part, slightly delayed or overlapping
+          // Animate the card column, slightly delayed
           tl.add({
-            targets: secondPartToAnimate,
+            targets: cardColumn,
             opacity: [0, 1],
-            translateX: [secondPartTranslateXStart, 0],
-            translateY: [10,0],
+            translateX: 0, // Animate to final X position
+            translateY: 0, // Animate to final Y position
             duration: 500,
-          }, '-=350'); // Overlap with the animation of the first part
+            easing: 'easeOutCubic',
+          }, baseEventDelay + 150); // Start card animation a bit after its corresponding icon/date
         }
       }
     });
@@ -141,19 +130,17 @@ export default function TimelinePage() {
         </p>
       </AnimatedSection>
 
-      <div className="relative max-w-3xl mx-auto">
-        {/* The timeline line */}
-        <div 
-          ref={timelineLineRef} 
-          className="absolute left-1/2 top-0 bottom-0 w-1 bg-border -translate-x-1/2 md:block"  // Removed 'hidden' to allow animation
-          aria-hidden="true"
-        ></div>
+      <div className="relative max-w-4xl mx-auto"> {/* Increased max-width */}
+        {/* The timeline line is removed */}
         
         {timelineEvents.map((event, index) => (
           <div 
             key={event.id}
             ref={el => eventItemRefs.current[index] = el}
-            className="md:flex items-start md:items-center md:space-x-8 group mb-12 md:mb-16" // Added vertical spacing, ensure items-start for alignment
+            className={cn(
+              "md:flex items-start md:items-center group mb-12 md:mb-16",
+              index % 2 === 0 ? "md:space-x-12" : "md:space-x-reverse md:space-x-12" // Adjusted spacing
+            )}
           >
             {/* Date and Icon Column */}
             <div className={cn(
@@ -162,7 +149,7 @@ export default function TimelinePage() {
             )}>
               <div className={cn(
                 "mb-4 md:mb-0 relative",
-                index % 2 === 0 ? "md:pr-8" : "md:pl-8" 
+                index % 2 === 0 ? "md:pr-12" : "md:pl-12" // Matched spacing adjustment
               )}>
                 <div className="p-3 bg-primary/10 rounded-full inline-block mb-2 ring-4 ring-background group-hover:ring-primary/20 transition-all duration-300">
                   {event.icon}
@@ -175,14 +162,14 @@ export default function TimelinePage() {
             {/* Card Column */}
             <div className={cn(
               "md:w-1/2 relative",
-               index % 2 === 0 ? "md:pl-8" : "md:pr-8" 
+               index % 2 === 0 ? "md:pl-12" : "md:pr-12" // Matched spacing adjustment
             )}>
                {/* Pointer for desktop */}
               <div className={cn(
                 "hidden md:block absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-card border-border",
                 index % 2 === 0 
-                  ? "-left-2 border-t border-l rotate-45" // Points to left for card on right
-                  : "-right-2 border-b border-r rotate-45" // Points to right for card on left
+                  ? "-left-2 border-t border-l rotate-45" 
+                  : "-right-2 border-b border-r rotate-45" 
               )} aria-hidden="true" />
               <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 w-full">
                 <CardHeader>
@@ -199,3 +186,4 @@ export default function TimelinePage() {
     </div>
   );
 }
+
