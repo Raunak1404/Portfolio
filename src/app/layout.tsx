@@ -10,8 +10,8 @@ const geistSans = GeistSans;
 const geistMono = GeistMono;
 
 export const metadata: Metadata = {
-  title: 'Animated Ascent - Personal Portfolio',
-  description: 'A modern, visually captivating personal portfolio by Your Name.',
+  title: 'My Portfolio',
+  description: 'A modern, visually captivating personal portfolio by Raunak.',
 };
 
 export default function RootLayout({
