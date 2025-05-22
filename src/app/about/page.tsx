@@ -6,6 +6,17 @@ import { Badge } from '@/components/ui/badge';
 import { Briefcase, Code, Zap, Plane, Brain, Code2 } from 'lucide-react';
 import Image from 'next/image';
 
+// Helper component for Users icon, as it's not standard in lucide-react this way
+// If you have a specific 'Users' icon, you can import it. Otherwise, this is a placeholder.
+const Users = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+
 const skills = [
   { name: 'Aerospace Fundamentals', level: 85, icon: <Plane className="h-5 w-5 text-primary" /> },
   { name: 'Python', level: 70, icon: <Code className="h-5 w-5 text-primary" /> },
@@ -108,14 +119,3 @@ export default function AboutPage() {
     </div>
   );
 }
-
-// Helper component for Users icon, as it's not standard in lucide-react this way
-// If you have a specific 'Users' icon, you can import it. Otherwise, this is a placeholder.
-const Users = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-    <circle cx="9" cy="7" r="4"/>
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-  </svg>
-);
