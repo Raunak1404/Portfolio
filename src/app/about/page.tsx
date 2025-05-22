@@ -6,8 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Briefcase, Code, Zap, Plane, Brain, Code2 } from 'lucide-react';
 import Image from 'next/image';
 
-// Helper component for Users icon, as it's not standard in lucide-react this way
-// If you have a specific 'Users' icon, you can import it. Otherwise, this is a placeholder.
+// Helper component for Users icon
 const Users = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -31,9 +30,7 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-12 md:py-20">
       <AnimatedSection className="text-center mb-16 md:mb-20">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">About Me</h1>
-        <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
-          I'm Raunak Saxena, an Aerospace Engineering student at NTU Singapore, passionate about the intersection of aviation, Computer Science, and AI.
-        </p>
+        {/* Removed redundant introductory paragraph here */}
       </AnimatedSection>
 
       <AnimatedSection className="mb-16 md:mb-20">
@@ -42,11 +39,11 @@ export default function AboutPage() {
             <div className="md:w-1/3 flex items-center justify-center py-8 px-4 bg-card-foreground/5">
               <div className="relative w-[200px] h-[250px] sm:w-[220px] md:w-[240px] sm:h-[275px] md:h-[300px] rounded-full overflow-hidden shadow-2xl">
                 <Image
-                  src="https://placehold.co/400x500.png"
+                  src="https://placehold.co/400x500.png" // Placeholder image
                   alt="Raunak Saxena"
                   fill
                   className="object-cover"
-                  data-ai-hint="personal photo"
+                  data-ai-hint="personal photo" // Hint for actual image
                   priority
                 />
               </div>
@@ -110,9 +107,9 @@ export default function AboutPage() {
               <p className="text-foreground/80">Eager to explore new technologies and creative solutions, especially at the nexus of aerospace and AI.</p>
             </Card>
             <Card className="p-6 shadow-lg">
-              <Zap className="h-12 w-12 text-accent mx-auto mb-4" />
+              <Code2 className="h-12 w-12 text-accent mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-2">Growth</h3>
-              <p className="text-foreground/80">Committed to continuous learning and problem-solving to drive progress.</p>
+              <p className="text-foreground/80">Committed to continuous learning and problem-solving to drive progress in technology.</p>
             </Card>
          </div>
       </AnimatedSection>
